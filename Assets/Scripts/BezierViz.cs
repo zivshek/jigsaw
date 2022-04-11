@@ -1,9 +1,28 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BezierViz : MonoBehaviour
 {
+    public List<Vector2> ControlPoints = new List<Vector2>()
+    {
+        new Vector2(0, 0),
+        new Vector2(35, 15),
+        new Vector2(47, 13),
+        new Vector2(45, 5),
+        new Vector2(48, 0),
+        new Vector2(25, -5),
+        new Vector2(15, -18),
+        new Vector2(36, -20),
+        new Vector2(64, -20),
+        new Vector2(85, -18),
+        new Vector2(75, -5),
+        new Vector2(52, 0),
+        new Vector2(55, 5),
+        new Vector2(53, 13),
+        new Vector2(65, 15),
+        new Vector2(100, 0)
+    };
+
     [SerializeField]
     private GameObject m_pointPrefab;
     [SerializeField]
@@ -13,8 +32,7 @@ public class BezierViz : MonoBehaviour
     [SerializeField]
     private float m_lineWidth = 0.05f;
 
-    private List<Vector2> m_controlPoints;
-    private List<GameObject> m_points;
+    private List<GameObject> m_points = new List<GameObject>();
     private LineRenderer m_lineRenderer;
     private LineRenderer m_curveRenderer;
 
@@ -26,11 +44,9 @@ public class BezierViz : MonoBehaviour
 
         // Create the instances of PointPrefab
         // to show the control points.
-        for (int i = 0; i < m_controlPoints.Count; ++i)
+        for (int i = 0; i < ControlPoints.Count; ++i)
         {
-            GameObject obj = Instantiate(m_pointPrefab,
-              m_controlPoints[i],
-              Quaternion.identity);
+            GameObject obj = Instantiate(m_pointPrefab, ControlPoints[i], Quaternion.identity);
             obj.name = "ControlPoint_" + i.ToString();
             m_points.Add(obj);
         }
@@ -63,6 +79,22 @@ public class BezierViz : MonoBehaviour
         }
     }
 
+    void OnGUI()
+    {
+        Event e = Event.current;
+        if (e.isMouse)
+        {
+            if (e.clickCount == 2 && e.button == 0)
+            {
+                Vector2 rayPos = new Vector2(
+                    Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
+                    Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+
+                InsertNewControlPoint(rayPos);
+            }
+        }
+    }
+
     private LineRenderer CreateLine(string name, Color color)
     {
         GameObject obj = new GameObject();
@@ -74,5 +106,17 @@ public class BezierViz : MonoBehaviour
         lr.startWidth = m_lineWidth;
         lr.endWidth = m_lineWidth;
         return lr;
+    }
+
+    private void InsertNewControlPoint(Vector2 p)
+    {
+        if (m_points.Count >= 16)
+        {
+            Debug.Log("Cannot create any new control points. Max number is 16");
+            return;
+        }
+        GameObject obj = Instantiate(m_pointPrefab, p, Quaternion.identity);
+        obj.name = "ControlPoint_" + m_points.Count.ToString();
+        m_points.Add(obj);
     }
 }
