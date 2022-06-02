@@ -40,10 +40,16 @@ namespace Puzzle
         };
 
         public static List<Vector2> BezCurve = BezierCurve.PointList2(ControlPoints, 0.001f);
+        public static TilesSorting TilesSorting { get; private set; } = new TilesSorting();
 
         public Texture2D FinalCut { get; private set; }
         public int XIndex { get; private set; }
         public int YIndex { get; private set; }
+
+        public PosNegType GetPosNegType(Direction dir)
+        {
+            return m_PosNeg[(int)dir];
+        }
 
         private PosNegType[] m_PosNeg = new PosNegType[4]
         {
@@ -200,7 +206,7 @@ namespace Puzzle
 
         private void Fill(int x, int y)
         {
-            Color c = m_OriginalTex.GetPixel(x, y);
+            Color c = m_OriginalTex.GetPixel(x + XIndex * TileSize, y + YIndex * TileSize);
             c.a = 1.0f;
             FinalCut.SetPixel(x, y, c);
         }
@@ -349,6 +355,7 @@ namespace Puzzle
 
             // Create a SpriteRenderer.
             SpriteRenderer spriteRenderer = obj.AddComponent<SpriteRenderer>();
+            spriteRenderer.sortingLayerName = "Tiles";
 
             // Set the sprite created with the FinalCut 
             // texture of the tile to the SpriteRenderer
@@ -366,6 +373,8 @@ namespace Puzzle
             // add the TileMovement script component.
             TileMovement tm = obj.AddComponent<TileMovement>();
             tm.tile = tile;
+
+            TilesSorting.Add(spriteRenderer);
 
             return obj;
         }

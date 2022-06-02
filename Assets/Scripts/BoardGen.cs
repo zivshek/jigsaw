@@ -15,6 +15,12 @@ namespace Puzzle
         private GameObject m_gameObjOpaque;
         private GameObject m_gameObjTransparent;
 
+        private Tile[,] m_tiles;
+        private GameObject[,] m_tileObjs;
+
+        public int NumTilesX { get; private set; }
+        public int NumTilesY { get; private set; }
+
         void Start()
         {
             m_baseSpriteOpaque = LoadBaseTexture();
@@ -28,6 +34,10 @@ namespace Puzzle
             m_gameObjTransparent.name = m_imageFilename + "_Transparent";
             m_gameObjTransparent.AddComponent<SpriteRenderer>().sprite = m_baseSpriteTransparent;
             m_gameObjTransparent.GetComponent<SpriteRenderer>().sortingLayerName = "Transparent";
+
+            CreateJigsawTiles();
+
+            m_gameObjOpaque.gameObject.SetActive(false);
         }
 
         Sprite LoadBaseTexture()
@@ -118,6 +128,100 @@ namespace Puzzle
                 newTex.width,
                 newTex.height);
             return sprite;
+        }
+
+        void CreateJigsawTiles()
+        {
+            Texture2D baseTexture = m_baseSpriteOpaque.texture;
+            NumTilesX = baseTexture.width / Tile.TileSize;
+            NumTilesY = baseTexture.height / Tile.TileSize;
+
+            m_tiles = new Tile[NumTilesX, NumTilesY];
+            m_tileObjs = new GameObject[NumTilesX, NumTilesY];
+
+            for (int i = 0; i < NumTilesX; ++i)
+            {
+                for (int j = 0; j < NumTilesY; ++j)
+                {
+                    Tile tile = new Tile(baseTexture, i, j);
+
+                    // Left side tiles
+                    if (i == 0)
+                    {
+                        tile.SetPosNegType(Tile.Direction.LEFT, Tile.PosNegType.NONE);
+                    }
+                    else
+                    {
+                        // We have to create a tile that has LEFT direction opposite operation 
+                        // of the tile on the left's RIGHT direction operation.
+                        Tile leftTile = m_tiles[i - 1, j];
+                        Tile.PosNegType rightOp = leftTile.GetPosNegType(Tile.Direction.RIGHT);
+                        tile.SetPosNegType(Tile.Direction.LEFT, rightOp ==
+                          Tile.PosNegType.NEG ?
+                          Tile.PosNegType.POS : Tile.PosNegType.NEG);
+                    }
+
+                    // Bottom side tiles
+                    if (j == 0)
+                    {
+                        tile.SetPosNegType(Tile.Direction.DOWN, Tile.PosNegType.NONE);
+                    }
+                    else
+                    {
+                        // We have to create a tile that has LEFT direction opposite operation 
+                        // of the tile on the left's RIGHT direction operation.
+                        Tile downTile = m_tiles[i, j - 1];
+                        Tile.PosNegType rightOp = downTile.GetPosNegType(Tile.Direction.UP);
+                        tile.SetPosNegType(Tile.Direction.DOWN, rightOp ==
+                          Tile.PosNegType.NEG ?
+                          Tile.PosNegType.POS : Tile.PosNegType.NEG);
+                    }
+
+                    // Right side tiles
+                    if (i == NumTilesX - 1)
+                    {
+                        tile.SetPosNegType(Tile.Direction.RIGHT, Tile.PosNegType.NONE);
+                    }
+                    else
+                    {
+                        float toss = Random.Range(0.0f, 1.0f);
+                        if (toss < 0.5f)
+                        {
+                            tile.SetPosNegType(Tile.Direction.RIGHT, Tile.PosNegType.POS);
+                        }
+                        else
+                        {
+                            tile.SetPosNegType(Tile.Direction.RIGHT, Tile.PosNegType.NEG);
+                        }
+                    }
+
+                    // Up side tiles
+                    if (j == NumTilesY - 1)
+                    {
+                        tile.SetPosNegType(Tile.Direction.UP, Tile.PosNegType.NONE);
+                    }
+                    else
+                    {
+                        float toss = Random.Range(0.0f, 1.0f);
+                        if (toss < 0.5f)
+                        {
+                            tile.SetPosNegType(Tile.Direction.UP, Tile.PosNegType.POS);
+                        }
+                        else
+                        {
+                            tile.SetPosNegType(Tile.Direction.UP, Tile.PosNegType.NEG);
+                        }
+                    }
+
+                    tile.Apply();
+
+                    m_tiles[i, j] = tile;
+
+                    // Create a game object for the tile.
+                    m_tileObjs[i, j] = Tile.CreateGameObjectFromTile(tile);
+                    m_tileObjs[i, j].transform.SetParent(transform);
+                }
+            }
         }
     }
 }

@@ -11,14 +11,16 @@ namespace Puzzle
 
         private Vector3 GetCorrectPosition()
         {
-            return new Vector3(tile.XIndex * 100.0f, tile.YIndex * 100.0f, 0.0f);
+            return new Vector3(tile.XIndex * Tile.TileSize, tile.YIndex * Tile.TileSize, 0.0f);
         }
 
         private Vector3 mOffset = new Vector3(0.0f, 0.0f, 0.0f);
+        private SpriteRenderer m_spriteRenderer;
 
         // Start is called before the first frame update
         void Start()
         {
+            m_spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         // Update is called once per frame
@@ -33,6 +35,7 @@ namespace Puzzle
                 return;
             }
 
+            Tile.TilesSorting.BringToTop(m_spriteRenderer);
             mOffset = transform.position - Camera.main.ScreenToWorldPoint(
                 new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f));
         }
@@ -47,6 +50,7 @@ namespace Puzzle
             Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + mOffset;
             transform.position = curPosition;
         }
+
         void OnMouseUp()
         {
             if (EventSystem.current.IsPointerOverGameObject())
