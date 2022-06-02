@@ -3,26 +3,6 @@ using UnityEngine;
 
 public class BezierViz : MonoBehaviour
 {
-    public List<Vector2> ControlPoints = new List<Vector2>()
-    {
-        new Vector2(0, 0),
-        new Vector2(35, 15),
-        new Vector2(47, 13),
-        new Vector2(45, 5),
-        new Vector2(48, 0),
-        new Vector2(25, -5),
-        new Vector2(15, -18),
-        new Vector2(36, -20),
-        new Vector2(64, -20),
-        new Vector2(85, -18),
-        new Vector2(75, -5),
-        new Vector2(52, 0),
-        new Vector2(55, 5),
-        new Vector2(53, 13),
-        new Vector2(65, 15),
-        new Vector2(100, 0)
-    };
-
     [SerializeField]
     private GameObject m_pointPrefab;
     [SerializeField]
@@ -44,9 +24,9 @@ public class BezierViz : MonoBehaviour
 
         // Create the instances of PointPrefab
         // to show the control points.
-        for (int i = 0; i < ControlPoints.Count; ++i)
+        for (int i = 0; i < Puzzle.Tile.ControlPoints.Count; ++i)
         {
-            GameObject obj = Instantiate(m_pointPrefab, ControlPoints[i], Quaternion.identity);
+            GameObject obj = Instantiate(m_pointPrefab, Puzzle.Tile.ControlPoints[i], Quaternion.identity);
             obj.name = "ControlPoint_" + i.ToString();
             m_points.Add(obj);
         }
