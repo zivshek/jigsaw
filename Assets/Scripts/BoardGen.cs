@@ -23,7 +23,13 @@ namespace Puzzle
 
         void Start()
         {
+            CreateBoard();
+        }
+
+        public void CreateBoard()
+        {
             m_baseSpriteOpaque = LoadBaseTexture();
+
             m_gameObjOpaque = new GameObject();
             m_gameObjOpaque.name = m_imageFilename + "_Opaque";
             m_gameObjOpaque.AddComponent<SpriteRenderer>().sprite = m_baseSpriteOpaque;

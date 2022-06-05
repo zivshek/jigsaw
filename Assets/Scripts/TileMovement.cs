@@ -17,17 +17,11 @@ namespace Puzzle
         private Vector3 mOffset = new Vector3(0.0f, 0.0f, 0.0f);
         private SpriteRenderer m_spriteRenderer;
 
-        // Start is called before the first frame update
         void Start()
         {
             m_spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         void OnMouseDown()
         {
             if (EventSystem.current.IsPointerOverGameObject())
