@@ -20,6 +20,7 @@ namespace Puzzle
 
         public int NumTilesX { get; private set; }
         public int NumTilesY { get; private set; }
+        public bool LoadingFinished { get; private set; }
 
         void Start()
         {
@@ -41,9 +42,19 @@ namespace Puzzle
             m_gameObjTransparent.AddComponent<SpriteRenderer>().sprite = m_baseSpriteTransparent;
             m_gameObjTransparent.GetComponent<SpriteRenderer>().sortingLayerName = "Transparent";
 
-            CreateJigsawTiles();
+            StartCoroutine(CreateTilesCoroutine());
 
             m_gameObjOpaque.gameObject.SetActive(false);
+        }
+
+        IEnumerator CreateBoardCoroutine()
+        {
+            yield return StartCoroutine(CreateTilesCoroutine());
+
+            // Hide the m_gameObjOpaque game object.
+            m_gameObjOpaque.gameObject.SetActive(false);
+
+            LoadingFinished = true;
         }
 
         Sprite LoadBaseTexture()
@@ -136,7 +147,7 @@ namespace Puzzle
             return sprite;
         }
 
-        void CreateJigsawTiles()
+        IEnumerator CreateTilesCoroutine()
         {
             Texture2D baseTexture = m_baseSpriteOpaque.texture;
             NumTilesX = baseTexture.width / Tile.TileSize;
@@ -225,8 +236,13 @@ namespace Puzzle
 
                     // Create a game object for the tile.
                     m_tileObjs[i, j] = Tile.CreateGameObjectFromTile(tile);
-                    m_tileObjs[i, j].transform.SetParent(transform);
+
+                    if (m_tilesParent != null)
+                    {
+                        m_tileObjs[i, j].transform.SetParent(m_tilesParent);
+                    }
                 }
+                yield return null;
             }
         }
     }
