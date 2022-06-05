@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_imageFilename: Images/image01_8_5
+  m_tilesParent: {fileID: 1112073212}
 --- !u!4 &1112073212
 Transform:
   m_ObjectHideFlags: 0

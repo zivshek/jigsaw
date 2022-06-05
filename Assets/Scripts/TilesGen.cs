@@ -9,9 +9,6 @@ namespace Puzzle
 
         private Texture2D m_textureOriginal;
 
-        private Tile[,] m_Tiles = null;
-        private GameObject[,] m_TileGameObjects = null;
-
         public int NumTilesX { get; private set; }
         public int NumTilesY { get; private set; }
 

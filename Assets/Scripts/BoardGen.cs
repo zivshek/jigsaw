@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Puzzle
@@ -8,6 +7,8 @@ namespace Puzzle
     {
         [SerializeField]
         private string m_imageFilename;
+        [SerializeField]
+        private Transform m_tilesParent;
 
         private Sprite m_baseSpriteOpaque;
         private Sprite m_baseSpriteTransparent;
@@ -26,7 +27,7 @@ namespace Puzzle
         {
             CreateBoard();
         }
-
+        
         public void CreateBoard()
         {
             m_baseSpriteOpaque = LoadBaseTexture();
@@ -42,9 +43,7 @@ namespace Puzzle
             m_gameObjTransparent.AddComponent<SpriteRenderer>().sprite = m_baseSpriteTransparent;
             m_gameObjTransparent.GetComponent<SpriteRenderer>().sortingLayerName = "Transparent";
 
-            StartCoroutine(CreateTilesCoroutine());
-
-            m_gameObjOpaque.gameObject.SetActive(false);
+            StartCoroutine(CreateBoardCoroutine());
         }
 
         IEnumerator CreateBoardCoroutine()

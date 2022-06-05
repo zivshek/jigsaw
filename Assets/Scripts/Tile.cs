@@ -372,7 +372,7 @@ namespace Puzzle
 
             // add the TileMovement script component.
             TileMovement tm = obj.AddComponent<TileMovement>();
-            tm.tile = tile;
+            tm.Tile = tile;
 
             TilesSorting.Add(spriteRenderer);
 
