@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
-    [field:SerializeField]
+    [field: SerializeField]
     public float CameraSizeMin { get; private set; } = 150.0f;
 
-    public static bool CameraPanning { get; set; } = true;
+    public static bool CameraPanning { get; set; } = false;
 
     private Vector3 m_dragPos;
     private Vector3 m_originalPosition;

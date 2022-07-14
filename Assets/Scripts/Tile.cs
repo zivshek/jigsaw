@@ -369,6 +369,8 @@ namespace Puzzle
             // Add a box colliders so that we can handle 
             // picking/selection of the Tiles.
             BoxCollider2D box = obj.AddComponent<BoxCollider2D>();
+            int boxSize = Math.Max(TileSize - Padding, Padding);
+            box.size = new Vector2(boxSize, boxSize);
 
             // add the TileMovement script component.
             TileMovement tm = obj.AddComponent<TileMovement>();

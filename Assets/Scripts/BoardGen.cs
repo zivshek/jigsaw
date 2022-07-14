@@ -27,10 +27,14 @@ namespace Puzzle
         {
             CreateBoard();
         }
-        
+
         public void CreateBoard()
         {
             m_baseSpriteOpaque = LoadBaseTexture();
+
+            Texture2D baseTexture = m_baseSpriteOpaque.texture;
+            NumTilesX = baseTexture.width / Tile.TileSize;
+            NumTilesY = baseTexture.height / Tile.TileSize;
 
             m_gameObjOpaque = new GameObject();
             m_gameObjOpaque.name = m_imageFilename + "_Opaque";
@@ -148,10 +152,6 @@ namespace Puzzle
 
         IEnumerator CreateTilesCoroutine()
         {
-            Texture2D baseTexture = m_baseSpriteOpaque.texture;
-            NumTilesX = baseTexture.width / Tile.TileSize;
-            NumTilesY = baseTexture.height / Tile.TileSize;
-
             m_tiles = new Tile[NumTilesX, NumTilesY];
             m_tileObjs = new GameObject[NumTilesX, NumTilesY];
 
@@ -159,7 +159,7 @@ namespace Puzzle
             {
                 for (int j = 0; j < NumTilesY; ++j)
                 {
-                    Tile tile = new Tile(baseTexture, i, j);
+                    Tile tile = new Tile(m_baseSpriteOpaque.texture, i, j);
 
                     // Left side tiles
                     if (i == 0)

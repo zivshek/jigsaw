@@ -30,7 +30,7 @@ namespace Puzzle
             }
 
             // Hit piece. So disable the camera panning.
-            CameraMovement.CameraPanning = false;
+            //CameraMovement.CameraPanning = false;
 
             Tile.TilesSorting.BringToTop(m_spriteRenderer);
             m_offset = transform.position - Camera.main.ScreenToWorldPoint(
@@ -61,7 +61,7 @@ namespace Puzzle
             }
 
             // Enable back the camera panning.
-            CameraMovement.CameraPanning = true;
+            //CameraMovement.CameraPanning = true;
         }
     }
 }
