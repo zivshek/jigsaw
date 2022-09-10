@@ -16,7 +16,7 @@ namespace Puzzle
             POS, NEG, NONE
         }
 
-        public static int Padding = 20;
+        public static int Padding = 15;
         public static int TileSize = 100;
 
         public static readonly List<Vector2> ControlPoints = new List<Vector2>()
